@@ -6,43 +6,15 @@
     <title>Malla Curricular - Ingeniería de Petróleo</title>
     <style>
         :root {
-            /* Colores base (tema azul por defecto) */
-            --primary-color: #2c3e50;     /* Color principal (títulos/bordes) */
-            --secondary-color: #3498db;    /* Color secundario (botones/destacados) */
-            --success-color: #27ae60;      /* Color de aprobado (materias completadas) */
-            --disabled-color: #bdc3c7;     /* Color deshabilitado (materias bloqueadas) */
-            --text-color: #333;            /* Color de texto principal */
-            --light-bg: #f8f9fa;          /* Fondo claro de la página */
-            --border-color: #ddd;          /* Color de bordes */
-            --hover-effect: rgba(52, 152, 219, 0.1); /* Efecto hover (transparencia) */
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --disabled-color: #bdc3c7;
+            --text-color: #333;
+            --light-bg: #f8f9fa;
+            --border-color: #ddd;
         }
 
-        /* Temas alternativos (puedes activarlos añadiendo una clase al body) */
-        .tema-verde {
-            --primary-color: #1e5631;
-            --secondary-color: #4CAF50;
-            --success-color: #2E7D32;
-            --disabled-color: #a5d6a7;
-            --hover-effect: rgba(76, 175, 80, 0.1);
-        }
-
-        .tema-morado {
-            --primary-color: #4a148c;
-            --secondary-color: #9c27b0;
-            --success-color: #7b1fa2;
-            --disabled-color: #ce93d8;
-            --hover-effect: rgba(156, 39, 176, 0.1);
-        }
-
-        .tema-rojo {
-            --primary-color: #b71c1c;
-            --secondary-color: #f44336;
-            --success-color: #d32f2f;
-            --disabled-color: #ef9a9a;
-            --hover-effect: rgba(244, 67, 54, 0.1);
-        }
-
-        /* Resto del CSS (igual que antes, pero usando las variables) */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -55,7 +27,6 @@
             color: var(--text-color);
             line-height: 1.6;
             padding: 20px;
-            transition: background-color 0.3s, color 0.3s;
         }
 
         .header {
@@ -72,9 +43,45 @@
             margin-bottom: 10px;
         }
 
-        .course {
-            border-left: 4px solid var(--secondary-color);
+        .header p {
+            color: var(--text-color);
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .semester {
             background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .semester h3 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--secondary-color);
+            text-align: center;
+        }
+
+        .course {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            border-left: 4px solid var(--secondary-color);
+        }
+
+        .course:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
 
         .course.approved {
@@ -84,35 +91,411 @@
 
         .course.disabled {
             background-color: #f5f5f5;
+            color: #999;
+            cursor: not-allowed;
             border-left-color: var(--disabled-color);
         }
 
-        button {
-            background-color: var(--secondary-color);
+        .course-code {
+            font-weight: bold;
+            font-size: 0.9em;
+            color: var(--primary-color);
         }
 
-        /* ... (el resto de tu CSS permanece igual) ... */
+        .course.disabled .course-code {
+            color: #999;
+        }
+
+        .course-name {
+            font-size: 0.85em;
+            margin-top: 3px;
+        }
+
+        .prerequisite {
+            font-size: 0.75em;
+            color: #666;
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        .course.disabled .prerequisite {
+            color: #bbb;
+        }
+
+        .tooltip {
+            visibility: hidden;
+            width: 200px;
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            border-radius: 6px;
+            padding: 8px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.8em;
+        }
+
+        .course.disabled:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .tooltip::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: var(--primary-color) transparent transparent transparent;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        .progress-bar {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            height: 20px;
+        }
+
+        .progress {
+            height: 100%;
+            border-radius: 5px;
+            background-color: var(--success-color);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .progress-text {
+            text-align: center;
+            margin-bottom: 15px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        @media (max-width: 1200px) {
+            .grid-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
-    <!-- Agrega este selector de temas arriba del header -->
-    <div class="theme-selector" style="text-align: center; margin-bottom: 15px;">
-        <p>🎨 Elegir tema de colores:</p>
-        <button onclick="document.body.className = ''">Azul (default)</button>
-        <button onclick="document.body.className = 'tema-verde'">Verde</button>
-        <button onclick="document.body.className = 'tema-morado'">Morado</button>
-        <button onclick="document.body.className = 'tema-rojo'">Rojo</button>
-    </div>
-
     <div class="header">
         <h1>UNIVERSIDAD DE ORIENTE - NÚCLEO DE MONAGAS</h1>
         <h2>Malla Curricular de Ingeniería de Petróleo</h2>
         <p>Pensum Vigente - Haz clic en las materias para marcarlas como aprobadas</p>
     </div>
 
-    <!-- Resto de tu HTML (igual que antes) -->
+    <div class="progress-bar">
+        <div class="progress" id="progress"></div>
+    </div>
+    <div class="progress-text" id="progress-text">0% completado (0/50 materias)</div>
+
+    <div class="controls">
+        <button id="reset-btn">Reiniciar Progreso</button>
+        <button id="export-btn">Exportar Progreso</button>
+        <button id="import-btn">Importar Progreso</button>
+        <input type="file" id="import-file" style="display: none;" accept=".json">
+    </div>
+
+    <div class="grid-container" id="curriculum-grid">
+        <!-- Las materias se insertarán aquí con JavaScript -->
+    </div>
+
     <script>
-        // Tu JavaScript permanece igual
+        // Datos del pensum
+        const curriculum = [
+            {
+                semester: "PRIMER SEMESTRE",
+                courses: [
+                    { code: "006-1013", name: "Comprensión y Expresión Lingüística", prerequisites: [] },
+                    { code: "009-1012", name: "Desarrollo de Destrezas para el Aprendiz", prerequisites: [] },
+                    { code: "008-1814", name: "Matemáticas I", prerequisites: [] },
+                    { code: "007-1112", name: "Inglés Instrumental I", prerequisites: [] },
+                    { code: "010-1814", name: "Química I", prerequisites: [] },
+                    { code: "002-1111", name: "Extraacadémica", prerequisites: [] }
+                ]
+            },
+            {
+                semester: "SEGUNDO SEMESTRE",
+                courses: [
+                    { code: "007-1222", name: "Inglés Instrumental II", prerequisites: ["007-1112"] },
+                    { code: "008-1824", name: "Matemáticas II", prerequisites: ["008-1814"] },
+                    { code: "005-1814", name: "Física I", prerequisites: ["008-1814"] },
+                    { code: "010-1824", name: "Química II", prerequisites: ["010-1814"] },
+                    { code: "010-1821", name: "Laboratorio de Química I", prerequisites: ["010-1814"] }
+                ]
+            },
+            {
+                semester: "TERCER SEMESTRE",
+                courses: [
+                    { code: "008-2814", name: "Matemáticas III", prerequisites: ["008-1824"] },
+                    { code: "005-1824", name: "Física II", prerequisites: ["005-1814"] },
+                    { code: "005-1821", name: "Laboratorio de Física I", prerequisites: ["005-1814"] },
+                    { code: "066-2812", name: "Dibujo Técnico", prerequisites: ["30 Créditos"] },
+                    { code: "063-2032", name: "Inglés Instrumental III", prerequisites: ["007-1222"] },
+                    { code: "008-2833", name: "Introducción a la Programación", prerequisites: ["008-1824"] },
+                    { code: "063-2612", name: "Introducción a la Ingeniería de Petróleo", prerequisites: ["010-1824"] }
+                ]
+            },
+            {
+                semester: "CUARTO SEMESTRE",
+                courses: [
+                    { code: "008-2824", name: "Matemáticas IV", prerequisites: ["008-2814"] },
+                    { code: "063-2324", name: "Mecánica Vectorial para Ingenieros", prerequisites: ["005-1824"] },
+                    { code: "063-2042", name: "Inglés Instrumental IV", prerequisites: ["063-2032"] },
+                    { code: "063-2012", name: "Redacción de Informes Técnicos", prerequisites: ["063-2612"] },
+                    { code: "063-2724", name: "Geología General y Laboratorio", prerequisites: ["063-2612"] },
+                    { code: "XX-XXXX", name: "Electiva Socio humanística", prerequisites: ["006-XXXX"] }
+                ]
+            },
+            {
+                semester: "QUINTO SEMESTRE",
+                courses: [
+                    { code: "008-3813", name: "Métodos Numéricos para Ingenieros", prerequisites: ["008-2824", "008-2833"] },
+                    { code: "061-3553", name: "Mecánica de los Materiales", prerequisites: ["063-2324"] },
+                    { code: "063-3113", name: "Propiedades de Rocas y de Fluidos", prerequisites: ["008-2824", "063-2724"] },
+                    { code: "061-3753", name: "Termodinámica", prerequisites: ["008-2814", "010-1824"] },
+                    { code: "062-3314", name: "Estadística para Ingenieros", prerequisites: ["008-2833"] }
+                ]
+            },
+            {
+                semester: "SEXTO SEMESTRE",
+                courses: [
+                    { code: "063-3663", name: "Computac. y Modelos Matemáticos", prerequisites: ["008-3813"] },
+                    { code: "063-3624", name: "Geología Estructural", prerequisites: ["063-3113"] },
+                    { code: "063-3423", name: "Gasotecnia", prerequisites: ["061-3753"] },
+                    { code: "063-3123", name: "Yacimiento I", prerequisites: ["063-3113", "008-3813"] },
+                    { code: "063-3121", name: "Laboratorio de Yacimiento", prerequisites: ["063-3113"] },
+                    { code: "063-3824", name: "Fenómenos de Transporte Aplicado", prerequisites: ["061-3753"] }
+                ]
+            },
+            {
+                semester: "SÉPTIMO SEMESTRE",
+                courses: [
+                    { code: "063-4314", name: "Perforación", prerequisites: ["063-3824", "063-3624"] },
+                    { code: "063-4623", name: "Evaluación Económica de Proyectos", prerequisites: ["062-3314"] },
+                    { code: "063-4123", name: "Yacimientos II", prerequisites: ["063-3123"] },
+                    { code: "063-4734", name: "Registro de Pozos", prerequisites: ["063-3624"] },
+                    { code: "006X-XXXX3", name: "Electiva Técnica I", prerequisites: ["06-xxxxx"] }
+                ]
+            },
+            {
+                semester: "OCTAVO SEMESTRE",
+                courses: [
+                    { code: "063-4553", name: "Simulación de Yacimientos", prerequisites: ["063-4123"] },
+                    { code: "063-4223", name: "Producción de Hidrocarburos", prerequisites: ["063-3123"] },
+                    { code: "063-4323", name: "Completación y Reacondicionamiento de pozos", prerequisites: ["063-4314"] },
+                    { code: "063-4143", name: "Prueba de Pozos", prerequisites: ["063-4123"] },
+                    { code: "063-4322", name: "Laboratorio de Perforación", prerequisites: ["063-4314"] },
+                    { code: "063-4612", name: "Seminario y Proyecto de Investigación", prerequisites: ["063-4734", "063-3121"] }
+                ]
+            },
+            {
+                semester: "NOVENO SEMESTRE",
+                courses: [
+                    { code: "063-5113", name: "Explotación de Yacimientos de Crudos pesados", prerequisites: ["063-4143"] },
+                    { code: "063-5513", name: "Procesamientos de Hidrocarb. y Laborat.", prerequisites: ["063-4223"] },
+                    { code: "063-5213", name: "Procesos de Campos", prerequisites: ["063-4223"] },
+                    { code: "063-5714", name: "Geología de Producción", prerequisites: ["063-4734"] },
+                    { code: "063-5212", name: "Petróleo y Ambiente", prerequisites: ["063-4323"] },
+                    { code: "06X-XXXX3", name: "Electiva Técnica II", prerequisites: ["06X-XXXX"] }
+                ]
+            },
+            {
+                semester: "DÉCIMO SEMESTRE",
+                courses: [
+                    { code: "063-5625", name: "Trabajo Especial de Grado", prerequisites: ["063-4612"] },
+                    { code: "063-XXXX", name: "Electiva Técnica III", prerequisites: ["06X-XXXX"] }
+                ]
+            }
+        ];
+
+        // Estado de las materias aprobadas
+        let approvedCourses = JSON.parse(localStorage.getItem('approvedCourses')) || {};
+        let totalCourses = 0;
+
+        // Inicializar la malla curricular
+        function initCurriculum() {
+            const grid = document.getElementById('curriculum-grid');
+            grid.innerHTML = '';
+            totalCourses = 0;
+
+            curriculum.forEach(semester => {
+                const semesterElement = document.createElement('div');
+                semesterElement.className = 'semester';
+                
+                const title = document.createElement('h3');
+                title.textContent = semester.semester;
+                semesterElement.appendChild(title);
+                
+                semester.courses.forEach(course => {
+                    totalCourses++;
+                    const courseElement = document.createElement('div');
+                    const isApproved = approvedCourses[course.code] || false;
+                    const isDisabled = !isApproved && !checkPrerequisites(course.prerequisites);
+                    
+                    courseElement.className = course ${isApproved ? 'approved' : ''} ${isDisabled ? 'disabled' : ''};
+                    courseElement.dataset.code = course.code;
+                    
+                    const codeElement = document.createElement('div');
+                    codeElement.className = 'course-code';
+                    codeElement.textContent = course.code;
+                    
+                    const nameElement = document.createElement('div');
+                    nameElement.className = 'course-name';
+                    nameElement.textContent = course.name;
+                    
+                    const prereqElement = document.createElement('div');
+                    prereqElement.className = 'prerequisite';
+                    prereqElement.textContent = Prelación: ${course.prerequisites.join(', ') || 'Ninguna'};
+                    
+                    if (isDisabled) {
+                        const tooltip = document.createElement('div');
+                        tooltip.className = 'tooltip';
+                        tooltip.textContent = Debes aprobar: ${course.prerequisites.join(', ')};
+                        courseElement.appendChild(tooltip);
+                    }
+                    
+                    courseElement.appendChild(codeElement);
+                    courseElement.appendChild(nameElement);
+                    courseElement.appendChild(prereqElement);
+                    
+                    if (!isDisabled || isApproved) {
+                        courseElement.addEventListener('click', () => toggleCourse(course.code));
+                    }
+                    
+                    semesterElement.appendChild(courseElement);
+                });
+                
+                grid.appendChild(semesterElement);
+            });
+
+            updateProgress();
+        }
+
+        // Verificar si se cumplen los prerequisitos
+        function checkPrerequisites(prerequisites) {
+            if (prerequisites.length === 0) return true;
+            
+            // Caso especial para "30 Créditos"
+            if (prerequisites.includes("30 Créditos")) {
+                const approvedCount = Object.keys(approvedCourses).filter(code => approvedCourses[code]).length;
+                if (approvedCount < 6) return false; // 6 materias de 5 créditos cada una ≈ 30 créditos
+            }
+            
+            return prerequisites.every(prereq => {
+                // Si el prerequisito es un código de curso específico
+                if (prereq.includes('-')) {
+                    return approvedCourses[prereq];
+                }
+                // Si es un prerequisito genérico (como "06-xxxxx")
+                const prefix = prereq.split('-')[0];
+                return Object.keys(approvedCourses).some(code => code.startsWith(prefix));
+            });
+        }
+
+        // Alternar el estado de aprobación de un curso
+        function toggleCourse(courseCode) {
+            approvedCourses[courseCode] = !approvedCourses[courseCode];
+            localStorage.setItem('approvedCourses', JSON.stringify(approvedCourses));
+            initCurriculum();
+        }
+
+        // Actualizar la barra de progreso
+        function updateProgress() {
+            const approvedCount = Object.keys(approvedCourses).filter(code => approvedCourses[code]).length;
+            const percentage = Math.round((approvedCount / totalCourses) * 100);
+            
+            document.getElementById('progress').style.width = ${percentage}%;
+            document.getElementById('progress-text').textContent = 
+                ${percentage}% completado (${approvedCount}/${totalCourses} materias);
+        }
+
+        // Reiniciar el progreso
+        document.getElementById('reset-btn').addEventListener('click', () => {
+            if (confirm('¿Estás seguro de que quieres reiniciar todo tu progreso?')) {
+                approvedCourses = {};
+                localStorage.removeItem('approvedCourses');
+                initCurriculum();
+            }
+        });
+
+        // Exportar progreso
+        document.getElementById('export-btn').addEventListener('click', () => {
+            const dataStr = JSON.stringify(approvedCourses);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            
+            const exportFileDefaultName = 'progreso-petroleo.json';
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+        });
+
+        // Importar progreso
+        document.getElementById('import-btn').addEventListener('click', () => {
+            document.getElementById('import-file').click();
+        });
+
+        document.getElementById('import-file').addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const importedData = JSON.parse(e.target.result);
+                    if (confirm('¿Estás seguro de que quieres importar este progreso? Se sobrescribirá tu progreso actual.')) {
+                        approvedCourses = importedData;
+                        localStorage.setItem('approvedCourses', JSON.stringify(approvedCourses));
+                        initCurriculum();
+                    }
+                } catch (error) {
+                    alert('Error al importar el archivo. Asegúrate de que es un archivo JSON válido.');
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = ''; // Reset para permitir importar el mismo archivo otra vez
+        });
+
+        // Inicializar al cargar la página
+        document.addEventListener('DOMContentLoaded', initCurriculum);
     </script>
 </body>
 </html>
