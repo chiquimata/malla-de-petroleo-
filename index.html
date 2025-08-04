@@ -3,80 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Malla Curricular - Ingeniería de Petróleo</title>
+    <title>Malla Curricular Interactiva - Ingeniería de Petróleo</title>
     <style>
         :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #3498db;
-            --success-color: #27ae60;
-            --disabled-color: #bdc3c7;
+            --bg-color: #f4f7f9;
             --text-color: #333;
-            --light-bg: #f8f9fa;
-            --border-color: #ddd;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --header-bg: #4a69bd;
+            --header-text: #fff;
+            --semester-bg: #e2e8f0;
+            --course-bg: #ffffff;
+            --course-border: #ccd6e1;
+            --approved-bg: #a8d5ba;
+            --approved-border: #6b9e7e;
+            --locked-bg: #e0e0e0;
+            --locked-border: #b0b0b0;
+            --tooltip-bg: #333;
+            --tooltip-text: #fff;
+            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --font-size: 16px;
         }
 
         body {
-            background-color: var(--light-bg);
-            color: var(--text-color);
+            font-family: var(--font-family);
+            font-size: var(--font-size);
             line-height: 1.6;
-            padding: 20px;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-            padding: 20px;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        .header h1 {
-            color: var(--primary-color);
-            margin-bottom: 10px;
-        }
-
-        .header p {
             color: var(--text-color);
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 20px;
         }
 
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 15px;
-            margin-bottom: 30px;
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            background-color: var(--header-bg);
+            color: var(--header-text);
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+
+        header p {
+            margin: 5px 0 0;
+            font-size: 1.2em;
+        }
+
+        .malla {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
         }
 
         .semester {
-            background-color: white;
-            border-radius: 8px;
+            background-color: var(--semester-bg);
             padding: 15px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            flex: 1 1 280px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
         .semester h3 {
-            color: var(--primary-color);
-            margin-bottom: 15px;
-            padding-bottom: 8px;
-            border-bottom: 2px solid var(--secondary-color);
-            text-align: center;
+            margin-top: 0;
+            border-bottom: 2px solid var(--header-bg);
+            padding-bottom: 10px;
+            color: var(--header-bg);
+            font-size: 1.5em;
+        }
+
+        .course-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
         }
 
         .course {
-            padding: 10px;
+            background-color: var(--course-bg);
+            border: 1px solid var(--course-border);
+            border-left: 5px solid var(--header-bg);
+            padding: 15px;
             margin-bottom: 10px;
-            border-radius: 5px;
+            border-radius: 6px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: transform 0.2s, box-shadow 0.2s;
             position: relative;
-            border-left: 4px solid var(--secondary-color);
         }
 
         .course:hover {
@@ -85,417 +105,478 @@
         }
 
         .course.approved {
-            background-color: #e8f5e9;
-            border-left-color: var(--success-color);
+            background-color: var(--approved-bg);
+            border-color: var(--approved-border);
+            border-left-color: var(--approved-border);
         }
 
-        .course.disabled {
-            background-color: #f5f5f5;
-            color: #999;
+        .course.locked {
+            background-color: var(--locked-bg);
+            border-color: var(--locked-border);
             cursor: not-allowed;
-            border-left-color: var(--disabled-color);
+            opacity: 0.6;
         }
 
-        .course-code {
+        .course.locked::after {
+            content: '🔒';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.2em;
+        }
+
+        .course .code {
             font-weight: bold;
+            color: var(--header-bg);
+            display: block;
+        }
+
+        .course .name {
+            font-size: 1.1em;
+            margin: 5px 0 0;
+        }
+        
+        .course .prerequisites {
             font-size: 0.9em;
-            color: var(--primary-color);
-        }
-
-        .course.disabled .course-code {
-            color: #999;
-        }
-
-        .course-name {
-            font-size: 0.85em;
-            margin-top: 3px;
-        }
-
-        .prerequisite {
-            font-size: 0.75em;
             color: #666;
             margin-top: 5px;
-            font-style: italic;
-        }
-
-        .course.disabled .prerequisite {
-            color: #bbb;
         }
 
         .tooltip {
             visibility: hidden;
-            width: 200px;
-            background-color: var(--primary-color);
-            color: white;
+            background-color: var(--tooltip-bg);
+            color: var(--tooltip-text);
             text-align: center;
             border-radius: 6px;
-            padding: 8px;
+            padding: 5px 10px;
             position: absolute;
             z-index: 1;
             bottom: 125%;
             left: 50%;
             transform: translateX(-50%);
+            white-space: nowrap;
             opacity: 0;
             transition: opacity 0.3s;
-            font-size: 0.8em;
         }
 
-        .course.disabled:hover .tooltip {
+        .course.locked:hover .tooltip {
             visibility: visible;
             opacity: 1;
         }
 
-        .tooltip::after {
-            content: "";
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            margin-left: -5px;
-            border-width: 5px;
-            border-style: solid;
-            border-color: var(--primary-color) transparent transparent transparent;
-        }
-
-        .controls {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        button {
-            padding: 10px 20px;
-            background-color: var(--secondary-color);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        button:hover {
-            background-color: #2980b9;
-        }
-
-        .progress-bar {
-            width: 100%;
-            background-color: #e0e0e0;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            height: 20px;
-        }
-
-        .progress {
-            height: 100%;
-            border-radius: 5px;
-            background-color: var(--success-color);
-            width: 0%;
-            transition: width 0.5s ease;
-        }
-
-        .progress-text {
-            text-align: center;
-            margin-bottom: 15px;
-            font-weight: bold;
-            color: var(--primary-color);
-        }
-
-        @media (max-width: 1200px) {
-            .grid-container {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
         @media (max-width: 768px) {
-            .grid-container {
-                grid-template-columns: 1fr;
+            .malla {
+                flex-direction: column;
             }
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>UNIVERSIDAD DE ORIENTE - NÚCLEO DE MONAGAS</h1>
-        <h2>Malla Curricular de Ingeniería de Petróleo</h2>
-        <p>Pensum Vigente - Haz clic en las materias para marcarlas como aprobadas</p>
-    </div>
 
-    <div class="progress-bar">
-        <div class="progress" id="progress"></div>
-    </div>
-    <div class="progress-text" id="progress-text">0% completado (0/50 materias)</div>
+    <div class="container">
+        <header>
+            <h1>Malla Curricular de Ingeniería de Petróleo</h1>
+            <p>Universidad de Oriente, Núcleo de Monagas</p>
+        </header>
 
-    <div class="controls">
-        <button id="reset-btn">Reiniciar Progreso</button>
-        <button id="export-btn">Exportar Progreso</button>
-        <button id="import-btn">Importar Progreso</button>
-        <input type="file" id="import-file" style="display: none;" accept=".json">
-    </div>
+        <div class="malla">
+            <div class="semester" data-semester="1">
+                <h3>Primer Semestre</h3>
+                <ul class="course-list">
+                    <li class="course" data-code="006-1013" data-prereqs="">
+                        <span class="code">006-1013</span>
+                        <span class="name">Comprensión y Expresión Lingüística</span>
+                    </li>
+                    <li class="course" data-code="009-1012" data-prereqs="">
+                        <span class="code">009-1012</span>
+                        <span class="name">Desarrollo de Destrezas para el Aprendizaje</span>
+                    </li>
+                    <li class="course" data-code="008-1814" data-prereqs="">
+                        <span class="code">008-1814</span>
+                        <span class="name">Matemáticas I</span>
+                    </li>
+                    <li class="course" data-code="007-1112" data-prereqs="">
+                        <span class="code">007-1112</span>
+                        <span class="name">Inglés Instrumental I</span>
+                    </li>
+                    <li class="course" data-code="010-1814" data-prereqs="">
+                        <span class="code">010-1814</span>
+                        <span class="name">Química I</span>
+                    </li>
+                    <li class="course" data-code="002-1111" data-prereqs="">
+                        <span class="code">002-1111</span>
+                        <span class="name">Extraacadémica</span>
+                    </li>
+                </ul>
+            </div>
 
-    <div class="grid-container" id="curriculum-grid">
-        <!-- Las materias se insertarán aquí con JavaScript -->
+            <div class="semester" data-semester="2">
+                <h3>Segundo Semestre</h3>
+                <ul class="course-list">
+                    <li class="course" data-code="007-1222" data-prereqs="007-1112">
+                        <span class="code">007-1222</span>
+                        <span class="name">Inglés Instrumental II</span>
+                        <span class="tooltip">Falta: 007-1112</span>
+                    </li>
+                    <li class="course" data-code="008-1824" data-prereqs="008-1814">
+                        <span class="code">008-1824</span>
+                        <span class="name">Matemáticas II</span>
+                        <span class="tooltip">Falta: 008-1814</span>
+                    </li>
+                    <li class="course" data-code="005-1814" data-prereqs="008-1814">
+                        <span class="code">005-1814</span>
+                        <span class="name">Física I</span>
+                        <span class="tooltip">Falta: 008-1814</span>
+                    </li>
+                    <li class="course" data-code="010-1824" data-prereqs="010-1814">
+                        <span class="code">010-1824</span>
+                        <span class="name">Química II</span>
+                        <span class="tooltip">Falta: 010-1814</span>
+                    </li>
+                    <li class="course" data-code="010-1821" data-prereqs="010-1814">
+                        <span class="code">010-1821</span>
+                        <span class="name">Laboratorio de Química I</span>
+                        <span class="tooltip">Falta: 010-1814</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="semester" data-semester="3">
+                <h3>Tercer Semestre</h3>
+                <ul class="course-list">
+                    <li class="course" data-code="008-2814" data-prereqs="008-1824">
+                        <span class="code">008-2814</span>
+                        <span class="name">Matemáticas III</span>
+                        <span class="tooltip">Falta: 008-1824</span>
+                    </li>
+                    <li class="course" data-code="005-1824" data-prereqs="005-1814">
+                        <span class="code">005-1824</span>
+                        <span class="name">Física II</span>
+                        <span class="tooltip">Falta: 005-1814</span>
+                    </li>
+                    <li class="course" data-code="005-1821" data-prereqs="005-1814">
+                        <span class="code">005-1821</span>
+                        <span class="name">Laboratorio de Física I</span>
+                        <span class="tooltip">Falta: 005-1814</span>
+                    </li>
+                    <li class="course" data-code="066-2812" data-prereqs="30 Créditos">
+                        <span class="code">066-2812</span>
+                        <span class="name">Dibujo Técnico</span>
+                        <span class="tooltip">Falta: 30 Créditos</span>
+                    </li>
+                    <li class="course" data-code="063-2032" data-prereqs="007-1222">
+                        <span class="code">063-2032</span>
+                        <span class="name">Inglés Instrumental III</span>
+                        <span class="tooltip">Falta: 007-1222</span>
+                    </li>
+                    <li class="course" data-code="008-2833" data-prereqs="008-1824">
+                        <span class="code">008-2833</span>
+                        <span class="name">Introducción a la Programación</span>
+                        <span class="tooltip">Falta: 008-1824</span>
+                    </li>
+                    <li class="course" data-code="063-2612" data-prereqs="010-1824">
+                        <span class="code">063-2612</span>
+                        <span class="name">Introducción a la Ingeniería de Petróleo</span>
+                        <span class="tooltip">Falta: 010-1824</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="semester" data-semester="4">
+                <h3>Cuarto Semestre</h3>
+                <ul class="course-list">
+                    <li class="course" data-code="008-2824" data-prereqs="008-2814">
+                        <span class="code">008-2824</span>
+                        <span class="name">Matemáticas IV</span>
+                        <span class="tooltip">Falta: 008-2814</span>
+                    </li>
+                    <li class="course" data-code="063-2324" data-prereqs="005-1824">
+                        <span class="code">063-2324</span>
+                        <span class="name">Mecánica Vectorial para Ingenieros</span>
+                        <span class="tooltip">Falta: 005-1824</span>
+                    </li>
+                    <li class="course" data-code="063-2042" data-prereqs="063-2032">
+                        <span class="code">063-2042</span>
+                        <span class="name">Inglés Instrumental IV</span>
+                        <span class="tooltip">Falta: 063-2032</span>
+                    </li>
+                    <li class="course" data-code="063-2012" data-prereqs="063-2612">
+                        <span class="code">063-2012</span>
+                        <span class="name">Redacción de Informes Técnicos</span>
+                        <span class="tooltip">Falta: 063-2612</span>
+                    </li>
+                    <li class="course" data-code="063-2724" data-prereqs="063-2612">
+                        <span class="code">063-2724</span>
+                        <span class="name">Geología General y Laboratorio</span>
+                        <span class="tooltip">Falta: 063-2612</span>
+                    </li>
+                    <li class="course" data-code="XX-XXXX" data-prereqs="006-XXXX">
+                        <span class="code">XX-XXXX</span>
+                        <span class="name">Electiva Socio humanística</span>
+                        <span class="tooltip">Falta: 006-XXXX</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="semester" data-semester="5">
+                <h3>Quinto Semestre</h3>
+                <ul class="course-list">
+                    <li class="course" data-code="008-3813" data-prereqs="008-2824,008-2833">
+                        <span class="code">008-3813</span>
+                        <span class="name">Métodos Numéricos para Ingenieros</span>
+                        <span class="tooltip">Falta: 008-2824, 008-2833</span>
+                    </li>
+                    <li class="course" data-code="061-3553" data-prereqs="063-2324">
+                        <span class="code">061-3553</span>
+                        <span class="name">Mecánica de los Materiales</span>
+                        <span class="tooltip">Falta: 063-2324</span>
+                    </li>
+                    <li class="course" data-code="063-3113" data-prereqs="008-2824,063-2724">
+                        <span class="code">063-3113</span>
+                        <span class="name">Propiedades de Rocas y Fluidos</span>
+                        <span class="tooltip">Falta: 008-2824, 063-2724</span>
+                    </li>
+                    <li class="course" data-code="061-3753" data-prereqs="008-2814,010-1824">
+                        <span class="code">061-3753</span>
+                        <span class="name">Termodinámica</span>
+                        <span class="tooltip">Falta: 008-2814, 010-1824</span>
+                    </li>
+                    <li class="course" data-code="062-3314" data-prereqs="008-2833">
+                        <span class="code">062-3314</span>
+                        <span class="name">Estadística para Ingenieros</span>
+                        <span class="tooltip">Falta: 008-2833</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="semester" data-semester="6">
+                <h3>Sexto Semestre</h3>
+                <ul class="course-list">
+                    <li class="course" data-code="063-3663" data-prereqs="008-3813">
+                        <span class="code">063-3663</span>
+                        <span class="name">Computación y Modelos Matemáticos</span>
+                        <span class="tooltip">Falta: 008-3813</span>
+                    </li>
+                    <li class="course" data-code="063-3624" data-prereqs="063-3113">
+                        <span class="code">063-3624</span>
+                        <span class="name">Geología Estructural</span>
+                        <span class="tooltip">Falta: 063-3113</span>
+                    </li>
+                    <li class="course" data-code="063-3423" data-prereqs="061-3753">
+                        <span class="code">063-3423</span>
+                        <span class="name">Gasotecnia</span>
+                        <span class="tooltip">Falta: 061-3753</span>
+                    </li>
+                    <li class="course" data-code="063-3123" data-prereqs="063-3113">
+                        <span class="code">063-3123</span>
+                        <span class="name">Yacimiento I</span>
+                        <span class="tooltip">Falta: 063-3113</span>
+                    </li>
+                    <li class="course" data-code="063-3121" data-prereqs="063-3113">
+                        <span class="code">063-3121</span>
+                        <span class="name">Laboratorio de Yacimiento</span>
+                        <span class="tooltip">Falta: 063-3113</span>
+                    </li>
+                    <li class="course" data-code="063-3824" data-prereqs="061-3753">
+                        <span class="code">063-3824</span>
+                        <span class="name">Fenómenos de Transporte Aplicado</span>
+                        <span class="tooltip">Falta: 061-3753</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="semester" data-semester="7">
+                <h3>Séptimo Semestre</h3>
+                <ul class="course-list">
+                    <li class="course" data-code="063-4314" data-prereqs="063-3824,063-3624">
+                        <span class="code">063-4314</span>
+                        <span class="name">Perforación</span>
+                        <span class="tooltip">Falta: 063-3824, 063-3624</span>
+                    </li>
+                    <li class="course" data-code="063-4623" data-prereqs="062-3314">
+                        <span class="code">063-4623</span>
+                        <span class="name">Evaluación Económica de Proyectos</span>
+                        <span class="tooltip">Falta: 062-3314</span>
+                    </li>
+                    <li class="course" data-code="063-4123" data-prereqs="063-3123">
+                        <span class="code">063-4123</span>
+                        <span class="name">Yacimientos II</span>
+                        <span class="tooltip">Falta: 063-3123</span>
+                    </li>
+                    <li class="course" data-code="063-4734" data-prereqs="063-3624">
+                        <span class="code">063-4734</span>
+                        <span class="name">Registro de Pozos</span>
+                        <span class="tooltip">Falta: 063-3624</span>
+                    </li>
+                    <li class="course" data-code="006X-XXXX3" data-prereqs="">
+                        <span class="code">006X-XXXX3</span>
+                        <span class="name">Electiva Técnica I</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="semester" data-semester="8">
+                <h3>Octavo Semestre</h3>
+                <ul class="course-list">
+                    <li class="course" data-code="063-4553" data-prereqs="063-4123">
+                        <span class="code">063-4553</span>
+                        <span class="name">Simulación de Yacimientos</span>
+                        <span class="tooltip">Falta: 063-4123</span>
+                    </li>
+                    <li class="course" data-code="063-4223" data-prereqs="063-3123">
+                        <span class="code">063-4223</span>
+                        <span class="name">Producción de Hidrocarburos</span>
+                        <span class="tooltip">Falta: 063-3123</span>
+                    </li>
+                    <li class="course" data-code="063-4323" data-prereqs="063-4314">
+                        <span class="code">063-4323</span>
+                        <span class="name">Completación y Reacondicionamiento de Pozos</span>
+                        <span class="tooltip">Falta: 063-4314</span>
+                    </li>
+                    <li class="course" data-code="063-4143" data-prereqs="063-4314">
+                        <span class="code">063-4143</span>
+                        <span class="name">Prueba de Pozos</span>
+                        <span class="tooltip">Falta: 063-4314</span>
+                    </li>
+                    <li class="course" data-code="063-4322" data-prereqs="063-4734">
+                        <span class="code">063-4322</span>
+                        <span class="name">Laboratorio de Perforación</span>
+                        <span class="tooltip">Falta: 063-4734</span>
+                    </li>
+                    <li class="course" data-code="063-4612" data-prereqs="063-3121">
+                        <span class="code">063-4612</span>
+                        <span class="name">Seminario y Proyecto de Investigación</span>
+                        <span class="tooltip">Falta: 063-3121</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="semester" data-semester="9">
+                <h3>Noveno Semestre</h3>
+                <ul class="course-list">
+                    <li class="course" data-code="063-5113" data-prereqs="063-4143">
+                        <span class="code">063-5113</span>
+                        <span class="name">Explotación de Yacimientos de Crudos Pesados</span>
+                        <span class="tooltip">Falta: 063-4143</span>
+                    </li>
+                    <li class="course" data-code="063-5513" data-prereqs="063-4223">
+                        <span class="code">063-5513</span>
+                        <span class="name">Procesamiento de Hidrocarburos y Laboratorio</span>
+                        <span class="tooltip">Falta: 063-4223</span>
+                    </li>
+                    <li class="course" data-code="063-5213" data-prereqs="063-4223">
+                        <span class="code">063-5213</span>
+                        <span class="name">Procesos de Campos</span>
+                        <span class="tooltip">Falta: 063-4223</span>
+                    </li>
+                    <li class="course" data-code="063-5714" data-prereqs="063-4734">
+                        <span class="code">063-5714</span>
+                        <span class="name">Geología de Producción</span>
+                        <span class="tooltip">Falta: 063-4734</span>
+                    </li>
+                    <li class="course" data-code="063-5212" data-prereqs="063-4323">
+                        <span class="code">063-5212</span>
+                        <span class="name">Petróleo y Ambiente</span>
+                        <span class="tooltip">Falta: 063-4323</span>
+                    </li>
+                    <li class="course" data-code="06X-XXXX3" data-prereqs="">
+                        <span class="code">06X-XXXX3</span>
+                        <span class="name">Electiva Técnica II</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="semester" data-semester="10">
+                <h3>Décimo Semestre</h3>
+                <ul class="course-list">
+                    <li class="course" data-code="063-5625" data-prereqs="063-4612">
+                        <span class="code">063-5625</span>
+                        <span class="name">Trabajo Especial de Grado</span>
+                        <span class="tooltip">Falta: 063-4612</span>
+                    </li>
+                    <li class="course" data-code="063-XXXX3" data-prereqs="">
+                        <span class="code">063-XXXX3</span>
+                        <span class="name">Electiva Técnica III</span>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
     </div>
 
     <script>
-        // Datos del pensum
-        const curriculum = [
-            {
-                semester: "PRIMER SEMESTRE",
-                courses: [
-                    { code: "006-1013", name: "Comprensión y Expresión Lingüística", prerequisites: [] },
-                    { code: "009-1012", name: "Desarrollo de Destrezas para el Aprendiz", prerequisites: [] },
-                    { code: "008-1814", name: "Matemáticas I", prerequisites: [] },
-                    { code: "007-1112", name: "Inglés Instrumental I", prerequisites: [] },
-                    { code: "010-1814", name: "Química I", prerequisites: [] },
-                    { code: "002-1111", name: "Extraacadémica", prerequisites: [] }
-                ]
-            },
-            {
-                semester: "SEGUNDO SEMESTRE",
-                courses: [
-                    { code: "007-1222", name: "Inglés Instrumental II", prerequisites: ["007-1112"] },
-                    { code: "008-1824", name: "Matemáticas II", prerequisites: ["008-1814"] },
-                    { code: "005-1814", name: "Física I", prerequisites: ["008-1814"] },
-                    { code: "010-1824", name: "Química II", prerequisites: ["010-1814"] },
-                    { code: "010-1821", name: "Laboratorio de Química I", prerequisites: ["010-1814"] }
-                ]
-            },
-            {
-                semester: "TERCER SEMESTRE",
-                courses: [
-                    { code: "008-2814", name: "Matemáticas III", prerequisites: ["008-1824"] },
-                    { code: "005-1824", name: "Física II", prerequisites: ["005-1814"] },
-                    { code: "005-1821", name: "Laboratorio de Física I", prerequisites: ["005-1814"] },
-                    { code: "066-2812", name: "Dibujo Técnico", prerequisites: ["30 Créditos"] },
-                    { code: "063-2032", name: "Inglés Instrumental III", prerequisites: ["007-1222"] },
-                    { code: "008-2833", name: "Introducción a la Programación", prerequisites: ["008-1824"] },
-                    { code: "063-2612", name: "Introducción a la Ingeniería de Petróleo", prerequisites: ["010-1824"] }
-                ]
-            },
-            {
-                semester: "CUARTO SEMESTRE",
-                courses: [
-                    { code: "008-2824", name: "Matemáticas IV", prerequisites: ["008-2814"] },
-                    { code: "063-2324", name: "Mecánica Vectorial para Ingenieros", prerequisites: ["005-1824"] },
-                    { code: "063-2042", name: "Inglés Instrumental IV", prerequisites: ["063-2032"] },
-                    { code: "063-2012", name: "Redacción de Informes Técnicos", prerequisites: ["063-2612"] },
-                    { code: "063-2724", name: "Geología General y Laboratorio", prerequisites: ["063-2612"] },
-                    { code: "XX-XXXX", name: "Electiva Socio humanística", prerequisites: ["006-XXXX"] }
-                ]
-            },
-            {
-                semester: "QUINTO SEMESTRE",
-                courses: [
-                    { code: "008-3813", name: "Métodos Numéricos para Ingenieros", prerequisites: ["008-2824", "008-2833"] },
-                    { code: "061-3553", name: "Mecánica de los Materiales", prerequisites: ["063-2324"] },
-                    { code: "063-3113", name: "Propiedades de Rocas y de Fluidos", prerequisites: ["008-2824", "063-2724"] },
-                    { code: "061-3753", name: "Termodinámica", prerequisites: ["008-2814", "010-1824"] },
-                    { code: "062-3314", name: "Estadística para Ingenieros", prerequisites: ["008-2833"] }
-                ]
-            },
-            {
-                semester: "SEXTO SEMESTRE",
-                courses: [
-                    { code: "063-3663", name: "Computac. y Modelos Matemáticos", prerequisites: ["008-3813"] },
-                    { code: "063-3624", name: "Geología Estructural", prerequisites: ["063-3113"] },
-                    { code: "063-3423", name: "Gasotecnia", prerequisites: ["061-3753"] },
-                    { code: "063-3123", name: "Yacimiento I", prerequisites: ["063-3113", "008-3813"] },
-                    { code: "063-3121", name: "Laboratorio de Yacimiento", prerequisites: ["063-3113"] },
-                    { code: "063-3824", name: "Fenómenos de Transporte Aplicado", prerequisites: ["061-3753"] }
-                ]
-            },
-            {
-                semester: "SÉPTIMO SEMESTRE",
-                courses: [
-                    { code: "063-4314", name: "Perforación", prerequisites: ["063-3824", "063-3624"] },
-                    { code: "063-4623", name: "Evaluación Económica de Proyectos", prerequisites: ["062-3314"] },
-                    { code: "063-4123", name: "Yacimientos II", prerequisites: ["063-3123"] },
-                    { code: "063-4734", name: "Registro de Pozos", prerequisites: ["063-3624"] },
-                    { code: "006X-XXXX3", name: "Electiva Técnica I", prerequisites: ["06-xxxxx"] }
-                ]
-            },
-            {
-                semester: "OCTAVO SEMESTRE",
-                courses: [
-                    { code: "063-4553", name: "Simulación de Yacimientos", prerequisites: ["063-4123"] },
-                    { code: "063-4223", name: "Producción de Hidrocarburos", prerequisites: ["063-3123"] },
-                    { code: "063-4323", name: "Completación y Reacondicionamiento de pozos", prerequisites: ["063-4314"] },
-                    { code: "063-4143", name: "Prueba de Pozos", prerequisites: ["063-4123"] },
-                    { code: "063-4322", name: "Laboratorio de Perforación", prerequisites: ["063-4314"] },
-                    { code: "063-4612", name: "Seminario y Proyecto de Investigación", prerequisites: ["063-4734", "063-3121"] }
-                ]
-            },
-            {
-                semester: "NOVENO SEMESTRE",
-                courses: [
-                    { code: "063-5113", name: "Explotación de Yacimientos de Crudos pesados", prerequisites: ["063-4143"] },
-                    { code: "063-5513", name: "Procesamientos de Hidrocarb. y Laborat.", prerequisites: ["063-4223"] },
-                    { code: "063-5213", name: "Procesos de Campos", prerequisites: ["063-4223"] },
-                    { code: "063-5714", name: "Geología de Producción", prerequisites: ["063-4734"] },
-                    { code: "063-5212", name: "Petróleo y Ambiente", prerequisites: ["063-4323"] },
-                    { code: "06X-XXXX3", name: "Electiva Técnica II", prerequisites: ["06X-XXXX"] }
-                ]
-            },
-            {
-                semester: "DÉCIMO SEMESTRE",
-                courses: [
-                    { code: "063-5625", name: "Trabajo Especial de Grado", prerequisites: ["063-4612"] },
-                    { code: "063-XXXX", name: "Electiva Técnica III", prerequisites: ["06X-XXXX"] }
-                ]
-            }
-        ];
+        document.addEventListener('DOMContentLoaded', () => {
+            const courses = document.querySelectorAll('.course');
+            const storageKey = 'approvedCourses_Petroleo';
 
-        // Estado de las materias aprobadas
-        let approvedCourses = JSON.parse(localStorage.getItem('approvedCourses')) || {};
-        let totalCourses = 0;
-
-        // Inicializar la malla curricular
-        function initCurriculum() {
-            const grid = document.getElementById('curriculum-grid');
-            grid.innerHTML = '';
-            totalCourses = 0;
-
-            curriculum.forEach(semester => {
-                const semesterElement = document.createElement('div');
-                semesterElement.className = 'semester';
-                
-                const title = document.createElement('h3');
-                title.textContent = semester.semester;
-                semesterElement.appendChild(title);
-                
-                semester.courses.forEach(course => {
-                    totalCourses++;
-                    const courseElement = document.createElement('div');
-                    const isApproved = approvedCourses[course.code] || false;
-                    const isDisabled = !isApproved && !checkPrerequisites(course.prerequisites);
-                    
-                    courseElement.className = course ${isApproved ? 'approved' : ''} ${isDisabled ? 'disabled' : ''};
-                    courseElement.dataset.code = course.code;
-                    
-                    const codeElement = document.createElement('div');
-                    codeElement.className = 'course-code';
-                    codeElement.textContent = course.code;
-                    
-                    const nameElement = document.createElement('div');
-                    nameElement.className = 'course-name';
-                    nameElement.textContent = course.name;
-                    
-                    const prereqElement = document.createElement('div');
-                    prereqElement.className = 'prerequisite';
-                    prereqElement.textContent = Prelación: ${course.prerequisites.join(', ') || 'Ninguna'};
-                    
-                    if (isDisabled) {
-                        const tooltip = document.createElement('div');
-                        tooltip.className = 'tooltip';
-                        tooltip.textContent = Debes aprobar: ${course.prerequisites.join(', ')};
-                        courseElement.appendChild(tooltip);
-                    }
-                    
-                    courseElement.appendChild(codeElement);
-                    courseElement.appendChild(nameElement);
-                    courseElement.appendChild(prereqElement);
-                    
-                    if (!isDisabled || isApproved) {
-                        courseElement.addEventListener('click', () => toggleCourse(course.code));
-                    }
-                    
-                    semesterElement.appendChild(courseElement);
-                });
-                
-                grid.appendChild(semesterElement);
-            });
-
-            updateProgress();
-        }
-
-        // Verificar si se cumplen los prerequisitos
-        function checkPrerequisites(prerequisites) {
-            if (prerequisites.length === 0) return true;
-            
-            // Caso especial para "30 Créditos"
-            if (prerequisites.includes("30 Créditos")) {
-                const approvedCount = Object.keys(approvedCourses).filter(code => approvedCourses[code]).length;
-                if (approvedCount < 6) return false; // 6 materias de 5 créditos cada una ≈ 30 créditos
-            }
-            
-            return prerequisites.every(prereq => {
-                // Si el prerequisito es un código de curso específico
-                if (prereq.includes('-')) {
-                    return approvedCourses[prereq];
-                }
-                // Si es un prerequisito genérico (como "06-xxxxx")
-                const prefix = prereq.split('-')[0];
-                return Object.keys(approvedCourses).some(code => code.startsWith(prefix));
-            });
-        }
-
-        // Alternar el estado de aprobación de un curso
-        function toggleCourse(courseCode) {
-            approvedCourses[courseCode] = !approvedCourses[courseCode];
-            localStorage.setItem('approvedCourses', JSON.stringify(approvedCourses));
-            initCurriculum();
-        }
-
-        // Actualizar la barra de progreso
-        function updateProgress() {
-            const approvedCount = Object.keys(approvedCourses).filter(code => approvedCourses[code]).length;
-            const percentage = Math.round((approvedCount / totalCourses) * 100);
-            
-            document.getElementById('progress').style.width = ${percentage}%;
-            document.getElementById('progress-text').textContent = 
-                ${percentage}% completado (${approvedCount}/${totalCourses} materias);
-        }
-
-        // Reiniciar el progreso
-        document.getElementById('reset-btn').addEventListener('click', () => {
-            if (confirm('¿Estás seguro de que quieres reiniciar todo tu progreso?')) {
-                approvedCourses = {};
-                localStorage.removeItem('approvedCourses');
-                initCurriculum();
-            }
-        });
-
-        // Exportar progreso
-        document.getElementById('export-btn').addEventListener('click', () => {
-            const dataStr = JSON.stringify(approvedCourses);
-            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-            
-            const exportFileDefaultName = 'progreso-petroleo.json';
-            
-            const linkElement = document.createElement('a');
-            linkElement.setAttribute('href', dataUri);
-            linkElement.setAttribute('download', exportFileDefaultName);
-            linkElement.click();
-        });
-
-        // Importar progreso
-        document.getElementById('import-btn').addEventListener('click', () => {
-            document.getElementById('import-file').click();
-        });
-
-        document.getElementById('import-file').addEventListener('change', (event) => {
-            const file = event.target.files[0];
-            if (!file) return;
-            
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                try {
-                    const importedData = JSON.parse(e.target.result);
-                    if (confirm('¿Estás seguro de que quieres importar este progreso? Se sobrescribirá tu progreso actual.')) {
-                        approvedCourses = importedData;
-                        localStorage.setItem('approvedCourses', JSON.stringify(approvedCourses));
-                        initCurriculum();
-                    }
-                } catch (error) {
-                    alert('Error al importar el archivo. Asegúrate de que es un archivo JSON válido.');
-                }
+            const getApprovedCourses = () => {
+                const stored = localStorage.getItem(storageKey);
+                return stored ? JSON.parse(stored) : [];
             };
-            reader.readAsText(file);
-            event.target.value = ''; // Reset para permitir importar el mismo archivo otra vez
-        });
 
-        // Inicializar al cargar la página
-        document.addEventListener('DOMContentLoaded', initCurriculum);
+            const saveApprovedCourses = (approved) => {
+                localStorage.setItem(storageKey, JSON.stringify(approved));
+            };
+
+            const updateMalla = () => {
+                const approvedCourses = new Set(getApprovedCourses());
+                
+                courses.forEach(course => {
+                    const courseCode = course.dataset.code;
+                    const prereqsString = course.dataset.prereqs;
+                    const prereqs = prereqsString ? prereqsString.split(',').map(p => p.trim()) : [];
+                    
+                    if (approvedCourses.has(courseCode)) {
+                        course.classList.add('approved');
+                        course.classList.remove('locked');
+                        course.onclick = () => toggleApproval(courseCode);
+                    } else {
+                        const isLocked = prereqs.some(prereq => !approvedCourses.has(prereq));
+                        if (isLocked) {
+                            course.classList.add('locked');
+                            course.classList.remove('approved');
+                            course.onclick = null;
+                            const tooltip = course.querySelector('.tooltip');
+                            if (tooltip) {
+                                const missingPrereqs = prereqs.filter(prereq => !approvedCourses.has(prereq));
+                                tooltip.textContent = `Falta: ${missingPrereqs.join(', ')}`;
+                            }
+                        } else {
+                            course.classList.remove('locked');
+                            course.classList.remove('approved');
+                            course.onclick = () => toggleApproval(courseCode);
+                        }
+                    }
+                });
+            };
+
+            const toggleApproval = (courseCode) => {
+                let approvedCourses = new Set(getApprovedCourses());
+                if (approvedCourses.has(courseCode)) {
+                    approvedCourses.delete(courseCode);
+                } else {
+                    approvedCourses.add(courseCode);
+                }
+                saveApprovedCourses(Array.from(approvedCourses));
+                updateMalla();
+            };
+
+            // Event listeners
+            courses.forEach(course => {
+                course.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    const courseCode = course.dataset.code;
+                    if (!course.classList.contains('locked')) {
+                        toggleApproval(courseCode);
+                    }
+                });
+            });
+
+            // Initial load
+            updateMalla();
+        });
     </script>
+
 </body>
 </html>
